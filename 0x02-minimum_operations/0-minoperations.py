@@ -15,19 +15,16 @@ def minOperations(n):
         Returns:
     int: The minimum number of opertions required. If n is les than or equal to 1, returns 0.
         """
-        
-        if n < 2:
-            return 0
-        
-        operations = 0
-        divisor = 2
-        
-        # Factorize n, summing up the factors as the operation count
-        while n > 1:
-            while n % divisor == 0:
-                operations += divisor
-                n //= divisor
-                
-                divisor += 1
-                
-                return operations
+       if n < 2:
+        return 0
+
+    operations = 0
+    divisor = 2
+
+    while n > 1:
+        while n % divisor == 0:
+            operations += divisor
+            n //= divisor
+        divisor += 1
+
+    return operations 
