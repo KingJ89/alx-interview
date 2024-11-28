@@ -5,18 +5,24 @@ Change comes from within
 
 def makeChange(coins, total):
     """
-    Determine the minimum number of coins needed to meet a given total.
+    Return the minimum number of coins needed to meet a given total.
     Args:
-        coins (list of ints): A list of coin values.
-        total (int): The total value to be met.
+        coins (list of ints): A list of coins of different values.
+        total (int): Total value to be met.
     Returns:
-        int: Minimum number of coins needed, or -1 if total cannot be met.
+        int: Number of coins or -1 if meeting the total is not possible.
     """
     if total <= 0:
         return 0
     
     if not coins:
         return -1
+    
+    # Check if any coin directly matches the total
+    try:
+        return 1 if total in coins else None
+    except ValueError:
+        pass
     
     # Sort coins in descending order
     coins.sort(reverse=True)
@@ -25,8 +31,12 @@ def makeChange(coins, total):
     for coin in coins:
         if total <= 0:
             break
-        # Use as many of this coin as possible
-        coin_count += total // coin
-        total %= coin
-        # If there's any total left, it means we cannot meet the target
+
+        # Use as many coins of the current denomination as possible
+        if total >= coin:
+            count = total // coin
+            coin_count += count
+            total %= coin
+            
+            # If total is not zero, return -1 (not possible to achieve total)
     return coin_count if total == 0 else -1
