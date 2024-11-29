@@ -1,42 +1,44 @@
 #!/usr/bin/python3
 """
-Change comes from within
+This script determines the minimum number of coins needed to make a total value.
 """
+
 
 def makeChange(coins, total):
     """
-    Return the minimum number of coins needed to meet a given total.
+    Determine the minimum number of coins needed to reach a specified total value.
     Args:
-        coins (list of ints): A list of coins of different values.
-        total (int): Total value to be met.
-    Returns:
-        int: Number of coins or -1 if meeting the total is not possible.
+        coins (list of ints): A list containing different coin values.
+        total (int): The total value to be achieved.
+    Return:
+        The minimum number of coins required to meet the total, or -1 if it is not possible to meet the total.
     """
     if total <= 0:
-        return 0
-    
-    if not coins:
-        return -1
-    
-    # Check if any coin directly matches the total
+        return 0  # No coins needed for a zero or negative total
+    if coins == [] or coins is None:
+        return -1  # No coins available or list is empty
     try:
-        return 1 if total in coins else None
+        n = coins.index(total)  # Check if the total is directly in the list of coins
+        return 1  # If the total is found in the coin list, only one coin is needed
     except ValueError:
-        pass
-    
-    # Sort coins in descending order
-    coins.sort(reverse=True)
-    coin_count = 0
-    
-    for coin in coins:
-        if total <= 0:
-            break
+        pass  # If the total is not found, continue to try to make the change
 
-        # Use as many coins of the current denomination as possible
-        if total >= coin:
-            count = total // coin
-            coin_count += count
-            total %= coin
-            
-            # If total is not zero, return -1 (not possible to achieve total)
-    return coin_count if total == 0 else -1
+    coins.sort(reverse=True)  # Sort coins in descending order to try larger coins first
+    coin_count = 0  # Counter to keep track of the number of coins used
+    for i in coins:
+        if total % i == 0:  # If the total is divisible by the coin value
+            coin_count += int(total / i)  # Add the number of coins needed for this value
+            return coin_count  # Return the result as the total can be exactly divided
+        if total - i >= 0:  # If the current coin can be subtracted from the total
+            if int(total / i) > 1:  # If more than one coin of this type is needed
+                coin_count += int(total / i)  # Add the required number of coins
+                total = total % i  # Reduce the total by the amount covered by these coins
+            else:
+                coin_count += 1  # Use one coin of this value
+                total -= i  # Subtract the coin value from the total
+                if total == 0:  # If the total is reduced to 0, stop
+                    break
+    if total > 0:  # If the total couldn't be made exactly, return -1
+        return -1
+    return coin_count  # Return the total number of coins used
+
